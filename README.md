@@ -8,5 +8,5 @@ The main benefit of a very deep network is that it can represent very complex fu
 
 During training, you might therefore see the magnitude (or norm) of the gradient for the earlier layers descrease to zero very rapidly as training proceeds:
 
-
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fkknews.cc%2Fcode%2Fpkk6538.html&psig=AOvVaw2oitnItVLW6Hv_38a2lh1b&ust=1598197782712000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLDEseuUr-sCFQAAAAAdAAAAABAD
 
