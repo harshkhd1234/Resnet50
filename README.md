@@ -8,5 +8,43 @@ The main benefit of a very deep network is that it can represent very complex fu
 
 During training, you might therefore see the magnitude (or norm) of the gradient for the earlier layers descrease to zero very rapidly as training proceeds:
 
-https://www.google.com/url?sa=i&url=https%3A%2F%2Fkknews.cc%2Fcode%2Fpkk6538.html&psig=AOvVaw2oitnItVLW6Hv_38a2lh1b&ust=1598197782712000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLDEseuUr-sCFQAAAAAdAAAAABAD
+# 2 - Building a Residual Network
+In ResNets, a "shortcut" or a "skip connection" allows the gradient to be directly backpropagated to earlier layers:
 
+
+
+The image on the left shows the "main path" through the network. The image on the right adds a shortcut to the main path. By stacking these ResNet blocks on top of each other, you can form a very deep network.
+
+Having ResNet blocks with the shortcut also makes it very easy for one of the blocks to learn an identity function. This means that you can stack on additional ResNet blocks with little risk of harming training set performance. (There is also some evidence that the ease of learning an identity function--even more than skip connections helping with vanishing gradients--accounts for ResNets' remarkable performance.)
+
+Two main types of blocks are used in a ResNet, depending mainly on whether the input/output dimensions are same or different. We are going to implement both of them.
+
+# 2.1 - The identity block
+The identity block is the standard block used in ResNets, and corresponds to the case where the input activation (say $a^{[l]}$) has the same dimension as the output activation (say $a^{[l+2]}$). To flesh out the different steps of what happens in a ResNet's identity block, here is an alternative diagram showing the individual steps:
+
+
+
+The upper path is the "shortcut path." The lower path is the "main path." In this diagram, we have also made explicit the CONV2D and ReLU steps in each layer. To speed up training we have also added a BatchNorm step. Don't worry about this being complicated to implement--you'll see that BatchNorm is just one line of code in Keras!
+
+
+
+Here're the individual steps.
+
+First component of main path:
+
+The first CONV2D has $F_1$ filters of shape (1,1) and a stride of (1,1). Its padding is "valid" and its name should be conv_name_base + '2a'. Use 0 as the seed for the random initialization.
+The first BatchNorm is normalizing the channels axis. Its name should be bn_name_base + '2a'.
+Then apply the ReLU activation function. This has no name and no hyperparameters.
+Second component of main path:
+
+The second CONV2D has $F_2$ filters of shape $(f,f)$ and a stride of (1,1). Its padding is "same" and its name should be conv_name_base + '2b'. Use 0 as the seed for the random initialization.
+The second BatchNorm is normalizing the channels axis. Its name should be bn_name_base + '2b'.
+Then apply the ReLU activation function. This has no name and no hyperparameters.
+Third component of main path:
+
+The third CONV2D has $F_3$ filters of shape (1,1) and a stride of (1,1). Its padding is "valid" and its name should be conv_name_base + '2c'. Use 0 as the seed for the random initialization.
+The third BatchNorm is normalizing the channels axis. Its name should be bn_name_base + '2c'. Note that there is no ReLU activation function in this component.
+Final step:
+
+The shortcut and the input are added together.
+Then apply the ReLU activation function. This has no name and no hyperparameters.
