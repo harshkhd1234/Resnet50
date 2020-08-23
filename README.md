@@ -19,32 +19,3 @@ Having ResNet blocks with the shortcut also makes it very easy for one of the bl
 
 Two main types of blocks are used in a ResNet, depending mainly on whether the input/output dimensions are same or different. We are going to implement both of them.
 
-# 2.1 - The identity block
-The identity block is the standard block used in ResNets, and corresponds to the case where the input activation (say $a^{[l]}$) has the same dimension as the output activation (say $a^{[l+2]}$). To flesh out the different steps of what happens in a ResNet's identity block, here is an alternative diagram showing the individual steps:
-
-
-
-The upper path is the "shortcut path." The lower path is the "main path." In this diagram, we have also made explicit the CONV2D and ReLU steps in each layer. To speed up training we have also added a BatchNorm step. Don't worry about this being complicated to implement--you'll see that BatchNorm is just one line of code in Keras!
-
-
-
-Here're the individual steps.
-
-First component of main path:
-
-The first CONV2D has $F_1$ filters of shape (1,1) and a stride of (1,1). Its padding is "valid" and its name should be conv_name_base + '2a'. Use 0 as the seed for the random initialization.
-The first BatchNorm is normalizing the channels axis. Its name should be bn_name_base + '2a'.
-Then apply the ReLU activation function. This has no name and no hyperparameters.
-Second component of main path:
-
-The second CONV2D has $F_2$ filters of shape $(f,f)$ and a stride of (1,1). Its padding is "same" and its name should be conv_name_base + '2b'. Use 0 as the seed for the random initialization.
-The second BatchNorm is normalizing the channels axis. Its name should be bn_name_base + '2b'.
-Then apply the ReLU activation function. This has no name and no hyperparameters.
-Third component of main path:
-
-The third CONV2D has $F_3$ filters of shape (1,1) and a stride of (1,1). Its padding is "valid" and its name should be conv_name_base + '2c'. Use 0 as the seed for the random initialization.
-The third BatchNorm is normalizing the channels axis. Its name should be bn_name_base + '2c'. Note that there is no ReLU activation function in this component.
-Final step:
-
-The shortcut and the input are added together.
-Then apply the ReLU activation function. This has no name and no hyperparameters.
